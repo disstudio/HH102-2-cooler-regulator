@@ -1,0 +1,65 @@
+ÀÄHH102-2
+   ÀÄMAIN  0/252  Ram=19
+      ÃÄ@cinit1  (Inline)  Ram=0
+      ÃÄds18b20_present  0/61  Ram=3
+      ÃÄsetup_db18b20  0/77  Ram=1
+      ³  ÃÄds18b20_reset_pulse  (Inline)  Ram=2
+      ³  ³  ÀÄds18b20_present  0/61  Ram=3
+      ³  ÃÄds18b20_write_byte  0/117  Ram=4
+      ³  ³  ÀÄds18b20_write_bit  (Inline)  Ram=3
+      ³  ÃÄds18b20_write_byte  0/117  Ram=4
+      ³  ³  ÀÄ*
+      ³  ÃÄds18b20_write_byte  0/117  Ram=4
+      ³  ³  ÀÄ*
+      ³  ÃÄds18b20_write_byte  0/117  Ram=4
+      ³  ³  ÀÄ*
+      ³  ÃÄds18b20_write_byte  0/117  Ram=4
+      ³  ³  ÀÄ*
+      ³  ÃÄds18b20_present  0/61  Ram=3
+      ³  ÃÄds18b20_write_byte  0/117  Ram=4
+      ³  ³  ÀÄ*
+      ³  ÃÄds18b20_write_byte  0/117  Ram=4
+      ³  ³  ÀÄ*
+      ³  ÃÄds18b20_read_byte  0/58  Ram=3
+      ³  ³  ÀÄds18b20_read_bit  (Inline)  Ram=3
+      ³  ÃÄds18b20_read_byte  0/58  Ram=3
+      ³  ³  ÀÄ*
+      ³  ÀÄds18b20_read_byte  0/58  Ram=3
+      ³     ÀÄ*
+      ÃÄblink  0/16  Ram=2
+      ³  ÃÄ@delay_ms1  0/23  Ram=1
+      ³  ÀÄ@delay_ms1  0/23  Ram=1
+      ÃÄds18b20_present  0/61  Ram=3
+      ÃÄsetup_db18b20  0/77  Ram=1
+      ³  ÀÄ*
+      ÃÄblink  0/16  Ram=2
+      ³  ÀÄ*
+      ÃÄdisplay_error  0/32  Ram=3
+      ³  ÃÄ@delay_ms1  0/23  Ram=1
+      ³  ÃÄ@delay_ms1  0/23  Ram=1
+      ³  ÀÄ@delay_ms1  0/23  Ram=1
+      ÃÄread_temp  0/54  Ram=3
+      ³  ÃÄds18b20_present  0/61  Ram=3
+      ³  ÃÄds18b20_write_byte  0/117  Ram=4
+      ³  ³  ÀÄ*
+      ³  ÃÄds18b20_write_byte  0/117  Ram=4
+      ³  ³  ÀÄ*
+      ³  ÃÄ@delay_ms1  0/23  Ram=1
+      ³  ÃÄds18b20_present  0/61  Ram=3
+      ³  ÃÄds18b20_write_byte  0/117  Ram=4
+      ³  ³  ÀÄ*
+      ³  ÃÄds18b20_write_byte  0/117  Ram=4
+      ³  ³  ÀÄ*
+      ³  ÃÄds18b20_read_byte  0/58  Ram=3
+      ³  ³  ÀÄ*
+      ³  ÃÄds18b20_read_byte  0/58  Ram=3
+      ³  ³  ÀÄ*
+      ³  ÀÄds18b20_read_byte  0/58  Ram=3
+      ³     ÀÄ*
+      ÃÄread_temp  0/54  Ram=3
+      ³  ÀÄ*
+      ÃÄ@DIV1616  0/37  Ram=5
+      ÃÄ@delay_ms1  0/23  Ram=1
+      ÃÄ@delay_ms1  0/23  Ram=1
+      ÃÄ@delay_ms1  0/23  Ram=1
+      ÀÄ@delay_ms1  0/23  Ram=1

@@ -1,0 +1,58 @@
+
+ROM used:   737/1024 (72%)
+            737/1024 (72%) including unused fragments
+
+            0.9 Average locations per line
+            4.9 Average locations per statement
+
+RAM used:   23/64 (36%) at main() level
+            29/64 (45%) worst case
+
+Stack used: 2 worst case (2 in main + 0 for interrupts)
+Stack size: 8
+
+Lines Stmts  %   Files
+----- ----- ---  -----
+  182    95  64  HH102-2.c
+   14     0   0  HH102-2.h
+  513     0   0  C:\Program Files (x86)\PICC\Devices\16F676.h
+  136    54  36  ds18b20.c
+----- -----
+  845   149 Total
+
+Page ROM  %  RAM    Vol Diff  Functions:
+---- --- --- ---    --- ----  ----------
+0     23   3    1             @delay_ms1
+ Inline         3    271  5.1  ds18b20_read_bit
+0     58   8    3    166  4.7  ds18b20_read_byte
+ Inline         3    618  6.2  ds18b20_write_bit
+0    117  16    4    213  6.0  ds18b20_write_byte
+0     61   8    3    417  6.1  ds18b20_present
+ Inline         2    163  2.5  ds18b20_reset_pulse
+0     77  10    1    349  1.9  setup_db18b20
+0     54   7    3    498  4.9  read_temp
+0     32   4    3    202  3.8  display_error
+0     16   2    2    156  3.3  blink
+0    252  34   19   2079 12.0  MAIN
+0     37   5    5             @DIV1616
+ Inline         0             @cinit1
+
+Program metrics:
+    Functions               11
+    Statements              149
+    Comments                156
+    Volume (V)              7780
+    Difficulty (D)          56.8
+    Effort to implement (E) 442111
+    Time to implement (T)   6 hours, 49 minutes
+    Est Delivered Bugs (B)  2
+    Cyclomatic Complexity   19
+    Maintainability (MI)    73
+
+ Segment     Used  Free
+-----------  ----  ----
+00000-00003     4  0  
+00004-003FF   733  287  
+
+
+

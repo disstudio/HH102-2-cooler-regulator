@@ -1,0 +1,48 @@
+# Specifications
+
+* For the test version
+--------------------
+Input voltage: 12-24 V
+Output voltage: 6-13 V (approximately)
+Load current: up to 3 A
+Temperature sensor type: DS18B20
+
+# Description of operation
+
+## Temperature setting parameters
+
+Units are in degrees Celsius
+* Lower threshold (default 45)
+* Upper threshold (default 65)
+* Hysteresis (default 3)
+
+## Operation algorithm
+
+After receiving the temperature value from all available sensors, the larger value is used.
+If the temperature is lower than the lower threshold, the output is turned off.
+When the temperature starts to exceed the lower threshold, the output value changes linearly according to the formula:
+
+Out = (Temp - Min) / (Max - Min) * 15
+
+Where the value Out = 0 corresponds to the minimum fan speed, 15 to the maximum.
+If the temperature starts to drop, the fan turns off when the value drops to
+(Min - Hysteresis), which is 42 degrees by default.
+
+# Indication
+
+## Initialization
+
+If the first sensor is present - one short flash.
+If the second sensor is present - two short flashes.
+
+## Operating mode
+
+Each measurement cycle is accompanied by a short flash.
+It is followed by a certain number of short flashes (from zero to 16 corresponding), showing the current speed level.
+
+## Error codes
+
+If an error occurs, the indicator emits a series of long flashes (1.5 s) with pauses of 5 seconds.
+The number of flashes in the series determines the error code
+
+3 - No temperature sensor found

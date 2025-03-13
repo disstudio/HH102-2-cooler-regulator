@@ -1,0 +1,1116 @@
+CCS PCM C Compiler, Version 5.049, 5967               13-Бер-25 16:16
+
+               Filename:   D:\Radio\=Проекты=\HH10x резервное питания для дома\HH102 UPS 24-12V\HH102-2 inv cooler\firmware\HH102-2.lst
+
+               ROM used:   737 words (72%)
+                           Largest free fragment is 287
+               RAM used:   23 (36%) at main() level
+                           29 (45%) worst case
+               Stack used: 2 locations
+               Stack size: 8
+
+*
+0000:  MOVLW  01
+0001:  MOVWF  0A
+0002:  GOTO   004
+0003:  NOP
+0004:  CALL   3FF
+0005:  BSF    03.5
+0006:  MOVWF  10
+0007:  MOVLW  00
+0008:  MOVWF  0A
+0009:  GOTO   1E5
+.................... #include <HH102-2.h> 
+.................... #include <16F676.h> 
+.................... //////////// Standard Header file for the PIC16F676 device //////////////// 
+.................... /////////////////////////////////////////////////////////////////////////// 
+.................... ////        (C) Copyright 1996, 2014 Custom Computer Services          //// 
+.................... //// This source code may only be used by licensed users of the CCS C  //// 
+.................... //// compiler.  This source code may only be distributed to other      //// 
+.................... //// licensed users of the CCS C compiler.  No other use, reproduction //// 
+.................... //// or distribution is permitted without written permission.          //// 
+.................... //// Derivative programs created using this software in object code    //// 
+.................... //// form are not restricted in any way.                               //// 
+.................... /////////////////////////////////////////////////////////////////////////// 
+.................... #device PIC16F676 
+*
+01C0:  CLRF   21
+01C1:  CLRF   22
+01C2:  CLRF   20
+01C3:  CLRF   23
+01C4:  MOVF   3B,W
+01C5:  BTFSS  03.2
+01C6:  GOTO   1CA
+01C7:  MOVF   3A,W
+01C8:  BTFSC  03.2
+01C9:  GOTO   1E4
+01CA:  MOVLW  10
+01CB:  MOVWF  3C
+01CC:  BCF    03.0
+01CD:  RLF    38,F
+01CE:  RLF    39,F
+01CF:  RLF    20,F
+01D0:  RLF    23,F
+01D1:  MOVF   3B,W
+01D2:  SUBWF  23,W
+01D3:  BTFSS  03.2
+01D4:  GOTO   1D7
+01D5:  MOVF   3A,W
+01D6:  SUBWF  20,W
+01D7:  BTFSS  03.0
+01D8:  GOTO   1E0
+01D9:  MOVF   3A,W
+01DA:  SUBWF  20,F
+01DB:  BTFSS  03.0
+01DC:  DECF   23,F
+01DD:  MOVF   3B,W
+01DE:  SUBWF  23,F
+01DF:  BSF    03.0
+01E0:  RLF    21,F
+01E1:  RLF    22,F
+01E2:  DECFSZ 3C,F
+01E3:  GOTO   1CC
+01E4:  GOTO   29E (RETURN)
+....................  
+.................... #list 
+....................  
+.................... #device ADC=10 
+....................  
+.................... #FUSES INTRC_IO                       // WDT, INTRC_IO Watch Dog Timer 
+....................  
+.................... #use delay(internal=4000000,restart_wdt) 
+*
+0143:  MOVLW  37
+0144:  MOVWF  04
+0145:  MOVF   00,W
+0146:  BTFSC  03.2
+0147:  GOTO   159
+0148:  MOVLW  01
+0149:  MOVWF  21
+014A:  MOVLW  BF
+014B:  MOVWF  20
+014C:  CLRWDT
+014D:  DECFSZ 20,F
+014E:  GOTO   14C
+014F:  DECFSZ 21,F
+0150:  GOTO   14A
+0151:  MOVLW  4A
+0152:  MOVWF  20
+0153:  DECFSZ 20,F
+0154:  GOTO   153
+0155:  NOP
+0156:  CLRWDT
+0157:  DECFSZ 00,F
+0158:  GOTO   148
+0159:  RETURN
+.................... #use fast_io(A) 
+.................... #use fast_io(C) 
+....................  
+.................... #define DCDC_DISABLE PIN_C4 
+.................... #define LED PIN_C5 
+.................... #define DELAY 200 
+....................  
+....................  
+....................  
+.................... #define PROBE_PIN_1 0x10 //PIN_A4 
+.................... #define PROBE_PIN_2 0x20 //PIN_A5 
+.................... #include <ds18b20.c> 
+....................  
+.................... #ifndef  DB18B20_C 
+.................... #define  DB18B20_C 
+....................  
+.................... #define TRIS_C_INITIAL 0x00 
+....................  
+.................... #define TOUCH_PIN_LOW(mask)    set_tris_a(TRIS_C_INITIAL); output_a(~mask) 
+.................... #define TOUCH_PIN_HIGH(mask)   set_tris_a(TRIS_C_INITIAL); output_a(0xFF) 
+.................... #define TOUCH_PIN_FLOAT(mask)  set_tris_a(TRIS_C_INITIAL | mask) 
+.................... #define TOUCH_PIN_READ(mask)   ((input_a() & mask) == 0) ? 0 : 1 
+....................  
+....................  
+.................... /* 
+.................... int1 touch_read_bit() 
+.................... This will read back a bit from the DS18B20 
+.................... PARAMS: none 
+.................... RETURNS: A bit from the DS18B20 
+.................... */ 
+.................... int1 ds18b20_read_bit(int8 mask) 
+.................... { 
+....................    int1 data; 
+....................  
+....................    TOUCH_PIN_LOW(mask); 
+*
+00C4:  MOVLW  00
+00C5:  BSF    03.5
+00C6:  MOVWF  05
+00C7:  BCF    03.5
+00C8:  MOVF   3A,W
+00C9:  MOVWF  3C
+00CA:  COMF   3C,F
+00CB:  MOVF   3C,W
+00CC:  MOVWF  05
+....................    delay_us(1); 
+00CD:  CLRWDT
+....................    TOUCH_PIN_FLOAT(mask); 
+00CE:  MOVF   3A,W
+00CF:  BSF    03.5
+00D0:  MOVWF  05
+....................    delay_us(5); 
+00D1:  CLRWDT
+00D2:  GOTO   0D3
+00D3:  GOTO   0D4
+....................    data = TOUCH_PIN_READ(mask); 
+00D4:  BCF    03.5
+00D5:  MOVF   05,W
+00D6:  ANDWF  3A,W
+00D7:  BTFSS  03.2
+00D8:  GOTO   0DB
+00D9:  MOVLW  00
+00DA:  GOTO   0DC
+00DB:  MOVLW  01
+00DC:  MOVWF  21
+00DD:  BCF    3B.0
+00DE:  BTFSC  21.0
+00DF:  BSF    3B.0
+....................    delay_us(60); 
+00E0:  CLRWDT
+00E1:  MOVLW  13
+00E2:  MOVWF  20
+00E3:  DECFSZ 20,F
+00E4:  GOTO   0E3
+00E5:  NOP
+....................  
+....................    return data; 
+00E6:  MOVLW  00
+00E7:  BTFSC  3B.0
+00E8:  MOVLW  01
+00E9:  MOVWF  21
+.................... } 
+....................  
+.................... /* 
+.................... BYTE touch_read_byte() 
+.................... This will read back a byte from the DS18B20 
+.................... PARAMS: none 
+.................... RETURNS: A byte from the DS18B20 
+.................... */ 
+.................... BYTE ds18b20_read_byte(int8 mask) 
+.................... { 
+....................    BYTE i,data; 
+....................  
+....................    for(i=1; i <= 8; ++i) 
+*
+00BC:  MOVLW  01
+00BD:  MOVWF  38
+00BE:  MOVF   38,W
+00BF:  SUBLW  08
+00C0:  BTFSS  03.0
+00C1:  GOTO   0F3
+....................       shift_right(&data, 1, ds18b20_read_bit(mask)); 
+00C2:  MOVF   37,W
+00C3:  MOVWF  3A
+*
+00EA:  MOVF   21,F
+00EB:  BTFSS  03.2
+00EC:  GOTO   0EF
+00ED:  BCF    03.0
+00EE:  GOTO   0F0
+00EF:  BSF    03.0
+00F0:  RRF    39,F
+00F1:  INCF   38,F
+00F2:  GOTO   0BE
+....................  
+....................    return data; 
+00F3:  MOVF   39,W
+00F4:  MOVWF  21
+00F5:  RETURN
+.................... } 
+....................  
+....................  
+.................... /* 
+.................... BOOLEAN touch_write_bit(int1 data) 
+.................... This will write a bit to the DS18B20 
+.................... PARAMS: The bit to write 
+.................... RETURNS: True if completed successfully, false if otherwise 
+.................... */ 
+.................... BOOLEAN ds18b20_write_bit(int8 mask, int1 data) 
+.................... { 
+....................    TOUCH_PIN_LOW(mask); 
+*
+0057:  MOVLW  00
+0058:  BSF    03.5
+0059:  MOVWF  05
+005A:  BCF    03.5
+005B:  MOVF   3B,W
+005C:  MOVWF  3D
+005D:  COMF   3D,F
+005E:  MOVF   3D,W
+005F:  MOVWF  05
+....................    delay_us(10); 
+0060:  CLRWDT
+0061:  MOVLW  02
+0062:  MOVWF  20
+0063:  DECFSZ 20,F
+0064:  GOTO   063
+0065:  GOTO   066
+....................    if(data) 
+0066:  MOVF   3C,F
+0067:  BTFSC  03.2
+0068:  GOTO   083
+....................    { 
+....................       TOUCH_PIN_HIGH(mask); 
+0069:  MOVLW  00
+006A:  BSF    03.5
+006B:  MOVWF  05
+006C:  MOVLW  FF
+006D:  BCF    03.5
+006E:  MOVWF  05
+....................       delay_us(10); 
+006F:  CLRWDT
+0070:  MOVLW  02
+0071:  MOVWF  20
+0072:  DECFSZ 20,F
+0073:  GOTO   072
+0074:  GOTO   075
+....................       if(!TOUCH_PIN_READ(mask)) 
+0075:  MOVF   05,W
+0076:  ANDWF  3B,W
+0077:  BTFSC  03.2
+0078:  GOTO   07B
+0079:  MOVLW  00
+007A:  GOTO   07C
+007B:  MOVLW  01
+007C:  XORLW  00
+007D:  BTFSC  03.2
+007E:  GOTO   082
+....................          return FALSE; 
+007F:  MOVLW  00
+0080:  MOVWF  21
+0081:  GOTO   0B1
+....................    } 
+0082:  GOTO   09F
+....................    else 
+....................    { 
+....................       TOUCH_PIN_LOW(mask); 
+0083:  MOVLW  00
+0084:  BSF    03.5
+0085:  MOVWF  05
+0086:  BCF    03.5
+0087:  MOVF   3B,W
+0088:  MOVWF  3D
+0089:  COMF   3D,F
+008A:  MOVF   3D,W
+008B:  MOVWF  05
+....................       delay_us(10); 
+008C:  CLRWDT
+008D:  MOVLW  02
+008E:  MOVWF  20
+008F:  DECFSZ 20,F
+0090:  GOTO   08F
+0091:  GOTO   092
+....................       if(TOUCH_PIN_READ(mask)) 
+0092:  MOVF   05,W
+0093:  ANDWF  3B,W
+0094:  BTFSS  03.2
+0095:  GOTO   098
+0096:  MOVLW  00
+0097:  GOTO   099
+0098:  MOVLW  01
+0099:  XORLW  00
+009A:  BTFSC  03.2
+009B:  GOTO   09F
+....................          return FALSE; 
+009C:  MOVLW  00
+009D:  MOVWF  21
+009E:  GOTO   0B1
+....................    } 
+....................    delay_us(50); 
+009F:  CLRWDT
+00A0:  MOVLW  10
+00A1:  MOVWF  20
+00A2:  DECFSZ 20,F
+00A3:  GOTO   0A2
+....................    TOUCH_PIN_HIGH(mask); 
+00A4:  MOVLW  00
+00A5:  BSF    03.5
+00A6:  MOVWF  05
+00A7:  MOVLW  FF
+00A8:  BCF    03.5
+00A9:  MOVWF  05
+....................    delay_us(50); 
+00AA:  CLRWDT
+00AB:  MOVLW  10
+00AC:  MOVWF  20
+00AD:  DECFSZ 20,F
+00AE:  GOTO   0AD
+....................    return TRUE; 
+00AF:  MOVLW  01
+00B0:  MOVWF  21
+.................... } 
+....................  
+.................... /* 
+.................... BOOLEAN touch_write_byte(BYTE data) 
+.................... This will write a byte to the DS18B20 
+.................... PARAMS: The byte to write 
+.................... RETURNS: True if completed successfully, false if otherwise 
+.................... */ 
+.................... BOOLEAN ds18b20_write_byte(int8 mask, BYTE data) 
+.................... { 
+....................    BYTE i; 
+....................  
+....................    for(i=1; i<=8; ++i) 
+*
+0047:  MOVLW  01
+0048:  MOVWF  39
+0049:  MOVF   39,W
+004A:  SUBLW  08
+004B:  BTFSS  03.0
+004C:  GOTO   0B9
+....................       if(!ds18b20_write_bit(mask, shift_right(&data, 1, 0))) 
+004D:  BCF    03.0
+004E:  RRF    38,F
+004F:  MOVLW  00
+0050:  BTFSC  03.0
+0051:  MOVLW  01
+0052:  MOVWF  3A
+0053:  MOVF   37,W
+0054:  MOVWF  3B
+0055:  MOVF   3A,W
+0056:  MOVWF  3C
+*
+00B1:  MOVF   21,F
+00B2:  BTFSS  03.2
+00B3:  GOTO   0B7
+....................          return FALSE; 
+00B4:  MOVLW  00
+00B5:  MOVWF  21
+00B6:  GOTO   0BB
+00B7:  INCF   39,F
+00B8:  GOTO   049
+....................  
+....................    return TRUE; 
+00B9:  MOVLW  01
+00BA:  MOVWF  21
+00BB:  RETURN
+.................... } 
+....................  
+.................... /* 
+.................... BOOLEAN touch_present() 
+.................... This will evaluate whether or not there is a touch present on the DS18B20 
+.................... PARAMS: none 
+.................... RETURNS: True if a touch is present, false if otherwise 
+.................... */ 
+.................... BOOLEAN ds18b20_present(int8 mask) 
+.................... { 
+....................    BOOLEAN present; 
+....................    TOUCH_PIN_LOW(mask); 
+*
+000A:  MOVLW  00
+000B:  BSF    03.5
+000C:  MOVWF  05
+000D:  BCF    03.5
+000E:  MOVF   37,W
+000F:  MOVWF  39
+0010:  COMF   39,F
+0011:  MOVF   39,W
+0012:  MOVWF  05
+....................    delay_us(500); 
+0013:  CLRWDT
+0014:  MOVLW  A6
+0015:  MOVWF  20
+0016:  DECFSZ 20,F
+0017:  GOTO   016
+....................    TOUCH_PIN_FLOAT(mask); 
+0018:  MOVF   37,W
+0019:  BSF    03.5
+001A:  MOVWF  05
+....................    delay_us(5); 
+001B:  CLRWDT
+001C:  GOTO   01D
+001D:  GOTO   01E
+....................  
+....................    if(!TOUCH_PIN_READ(mask)) 
+001E:  BCF    03.5
+001F:  MOVF   05,W
+0020:  ANDWF  37,W
+0021:  BTFSC  03.2
+0022:  GOTO   025
+0023:  MOVLW  00
+0024:  GOTO   026
+0025:  MOVLW  01
+0026:  XORLW  00
+0027:  BTFSC  03.2
+0028:  GOTO   02C
+....................       return FALSE; 
+0029:  MOVLW  00
+002A:  MOVWF  21
+002B:  GOTO   046
+....................  
+....................    delay_us(65); 
+002C:  CLRWDT
+002D:  MOVLW  15
+002E:  MOVWF  20
+002F:  DECFSZ 20,F
+0030:  GOTO   02F
+....................    present = !TOUCH_PIN_READ(mask); 
+0031:  MOVF   05,W
+0032:  ANDWF  37,W
+0033:  BTFSC  03.2
+0034:  GOTO   037
+0035:  MOVLW  00
+0036:  GOTO   038
+0037:  MOVLW  01
+0038:  MOVWF  21
+0039:  BCF    38.0
+003A:  BTFSC  21.0
+003B:  BSF    38.0
+....................    delay_us(240); 
+003C:  CLRWDT
+003D:  MOVLW  4F
+003E:  MOVWF  20
+003F:  DECFSZ 20,F
+0040:  GOTO   03F
+0041:  NOP
+....................    return present; 
+0042:  MOVLW  00
+0043:  BTFSC  38.0
+0044:  MOVLW  01
+0045:  MOVWF  21
+0046:  RETURN
+.................... } 
+....................  
+.................... /* 
+.................... void reset_pulse() 
+.................... This will send the DS18B20 a reset pulse 
+.................... PARAMS: none 
+.................... RETURNS: none 
+.................... */ 
+.................... void ds18b20_reset_pulse(int8 mask) 
+.................... { 
+....................    TOUCH_PIN_LOW(mask); 
+*
+00F8:  MOVLW  00
+00F9:  BSF    03.5
+00FA:  MOVWF  05
+00FB:  BCF    03.5
+00FC:  MOVF   35,W
+00FD:  MOVWF  36
+00FE:  COMF   36,F
+00FF:  MOVF   36,W
+0100:  MOVWF  05
+....................    delay_us(500); 
+0101:  CLRWDT
+0102:  MOVLW  A6
+0103:  MOVWF  20
+0104:  DECFSZ 20,F
+0105:  GOTO   104
+....................    TOUCH_PIN_FLOAT(mask); 
+0106:  MOVF   35,W
+0107:  BSF    03.5
+0108:  MOVWF  05
+....................    delay_us(5); 
+0109:  CLRWDT
+010A:  GOTO   10B
+010B:  GOTO   10C
+....................    while(!ds18b20_present(mask)); 
+010C:  BCF    03.5
+010D:  MOVF   35,W
+010E:  MOVWF  37
+010F:  CALL   00A
+0110:  MOVF   21,F
+0111:  BTFSC  03.2
+0112:  GOTO   10D
+.................... } 
+....................  
+.................... #endif 
+....................  
+....................  
+.................... #define TOUCH_CMD_SKIP_ROM 0xCC 
+.................... #define TOUCH_CMD_CONVERT_T 0x44 
+.................... #define TOUCH_CMD_WRITE_SCRATCHPAD 0x4E 
+.................... #define TOUCH_CMD_READ_SCRATCHPAD 0xBE 
+....................  
+.................... #rom int8 getenv("EEPROM_ADDRESS") = {0x45, 0x65, 0x03} 
+.................... // min temperature, max temperature, hysteresis (subtract from min temperature) 
+....................  
+.................... #define EEPROM_MIN_TEMP 0x00 
+.................... #define EEPROM_MAX_TEMP 0x01 
+.................... #define EEPROM_HYSTERESIS 0x02 
+....................  
+.................... void setup_db18b20(int8 mask) 
+.................... { 
+....................     // Reset DS18B20 
+....................     ds18b20_reset_pulse(mask); 
+*
+00F6:  MOVF   34,W
+00F7:  MOVWF  35
+....................      
+....................     // Config 0x1F - set 9 bit resolution 
+....................     ds18b20_write_byte(mask, TOUCH_CMD_SKIP_ROM); 
+*
+0113:  MOVF   34,W
+0114:  MOVWF  37
+0115:  MOVLW  CC
+0116:  MOVWF  38
+0117:  CALL   047
+....................     ds18b20_write_byte(mask, TOUCH_CMD_WRITE_SCRATCHPAD); 
+0118:  MOVF   34,W
+0119:  MOVWF  37
+011A:  MOVLW  4E
+011B:  MOVWF  38
+011C:  CALL   047
+....................     ds18b20_write_byte(mask, 0x03); // byte 2 - Th register 
+011D:  MOVF   34,W
+011E:  MOVWF  37
+011F:  MOVLW  03
+0120:  MOVWF  38
+0121:  CALL   047
+....................     ds18b20_write_byte(mask, 0x04); // byte 3 - Tl register 
+0122:  MOVF   34,W
+0123:  MOVWF  37
+0124:  MOVLW  04
+0125:  MOVWF  38
+0126:  CALL   047
+....................     ds18b20_write_byte(mask, 0x1F); // byte 4 - config register 
+0127:  MOVF   34,W
+0128:  MOVWF  37
+0129:  MOVLW  1F
+012A:  MOVWF  38
+012B:  CALL   047
+....................      
+....................     ds18b20_present(mask); 
+012C:  MOVF   34,W
+012D:  MOVWF  37
+012E:  CALL   00A
+....................     ds18b20_write_byte(mask, TOUCH_CMD_SKIP_ROM); 
+012F:  MOVF   34,W
+0130:  MOVWF  37
+0131:  MOVLW  CC
+0132:  MOVWF  38
+0133:  CALL   047
+....................     ds18b20_write_byte(mask, TOUCH_CMD_READ_SCRATCHPAD); 
+0134:  MOVF   34,W
+0135:  MOVWF  37
+0136:  MOVLW  BE
+0137:  MOVWF  38
+0138:  CALL   047
+....................     ds18b20_read_byte(mask); 
+0139:  MOVF   34,W
+013A:  MOVWF  37
+013B:  CALL   0BC
+....................     ds18b20_read_byte(mask); 
+013C:  MOVF   34,W
+013D:  MOVWF  37
+013E:  CALL   0BC
+....................     ds18b20_read_byte(mask); 
+013F:  MOVF   34,W
+0140:  MOVWF  37
+0141:  CALL   0BC
+0142:  RETURN
+.................... } 
+....................  
+.................... int16 read_temp(int8 mask) 
+.................... { 
+....................     union { 
+....................         int8 buffer[2]; 
+....................         int16 value; 
+....................     } temp; 
+....................  
+....................     if(!ds18b20_present(mask)) { 
+*
+018A:  MOVF   34,W
+018B:  MOVWF  37
+018C:  CALL   00A
+018D:  MOVF   21,F
+018E:  BTFSS  03.2
+018F:  GOTO   194
+....................         return 0; 
+0190:  MOVLW  00
+0191:  MOVWF  21
+0192:  MOVWF  22
+0193:  GOTO   1BF
+....................     } 
+....................      
+....................     // Read temperature 
+....................     ds18b20_write_byte(mask, TOUCH_CMD_SKIP_ROM); 
+0194:  MOVF   34,W
+0195:  MOVWF  37
+0196:  MOVLW  CC
+0197:  MOVWF  38
+0198:  CALL   047
+....................     ds18b20_write_byte(mask, TOUCH_CMD_CONVERT_T); 
+0199:  MOVF   34,W
+019A:  MOVWF  37
+019B:  MOVLW  44
+019C:  MOVWF  38
+019D:  CALL   047
+....................      
+....................     delay_ms(100); 
+019E:  MOVLW  64
+019F:  MOVWF  37
+01A0:  CALL   143
+....................      
+....................     ds18b20_present(mask); 
+01A1:  MOVF   34,W
+01A2:  MOVWF  37
+01A3:  CALL   00A
+....................     ds18b20_write_byte(mask, TOUCH_CMD_SKIP_ROM); 
+01A4:  MOVF   34,W
+01A5:  MOVWF  37
+01A6:  MOVLW  CC
+01A7:  MOVWF  38
+01A8:  CALL   047
+....................     ds18b20_write_byte(mask, TOUCH_CMD_READ_SCRATCHPAD); 
+01A9:  MOVF   34,W
+01AA:  MOVWF  37
+01AB:  MOVLW  BE
+01AC:  MOVWF  38
+01AD:  CALL   047
+....................     temp.buffer[0] = ds18b20_read_byte(mask); 
+01AE:  MOVF   34,W
+01AF:  MOVWF  37
+01B0:  CALL   0BC
+01B1:  MOVF   21,W
+01B2:  MOVWF  35
+....................     temp.buffer[1] = ds18b20_read_byte(mask); 
+01B3:  MOVF   34,W
+01B4:  MOVWF  37
+01B5:  CALL   0BC
+01B6:  MOVF   21,W
+01B7:  MOVWF  36
+....................     ds18b20_read_byte(mask); 
+01B8:  MOVF   34,W
+01B9:  MOVWF  37
+01BA:  CALL   0BC
+....................      
+....................     return temp.value; 
+01BB:  MOVF   35,W
+01BC:  MOVWF  21
+01BD:  MOVF   36,W
+01BE:  MOVWF  22
+01BF:  RETURN
+.................... } 
+....................  
+.................... void display_error(int8 code) 
+.................... { 
+....................     while(TRUE) { 
+....................         for (int8 i = 0; i < code; i++) { 
+*
+016A:  CLRF   35
+016B:  MOVF   34,W
+016C:  SUBWF  35,W
+016D:  BTFSC  03.0
+016E:  GOTO   181
+....................             output_high(LED); 
+016F:  BSF    07.5
+....................             delay_ms(800); 
+0170:  MOVLW  04
+0171:  MOVWF  36
+0172:  MOVLW  C8
+0173:  MOVWF  37
+0174:  CALL   143
+0175:  DECFSZ 36,F
+0176:  GOTO   172
+....................             output_low(LED); 
+0177:  BCF    07.5
+....................             delay_ms(800); 
+0178:  MOVLW  04
+0179:  MOVWF  36
+017A:  MOVLW  C8
+017B:  MOVWF  37
+017C:  CALL   143
+017D:  DECFSZ 36,F
+017E:  GOTO   17A
+017F:  INCF   35,F
+0180:  GOTO   16B
+....................         } 
+....................          
+....................         delay_ms(5000); 
+0181:  MOVLW  14
+0182:  MOVWF  36
+0183:  MOVLW  FA
+0184:  MOVWF  37
+0185:  CALL   143
+0186:  DECFSZ 36,F
+0187:  GOTO   183
+0188:  GOTO   16A
+....................     } 
+0189:  GOTO   22A (RETURN)
+.................... } 
+....................  
+.................... void blink(int8 code) 
+.................... { 
+....................     for (int8 i = 0; i < code; i++) { 
+*
+015A:  CLRF   35
+015B:  MOVF   34,W
+015C:  SUBWF  35,W
+015D:  BTFSC  03.0
+015E:  GOTO   169
+....................         output_high(LED); 
+015F:  BSF    07.5
+....................         delay_ms(75); 
+0160:  MOVLW  4B
+0161:  MOVWF  37
+0162:  CALL   143
+....................         output_low(LED); 
+0163:  BCF    07.5
+....................         delay_ms(75); 
+0164:  MOVLW  4B
+0165:  MOVWF  37
+0166:  CALL   143
+0167:  INCF   35,F
+0168:  GOTO   15B
+....................     } 
+0169:  RETURN
+.................... } 
+....................  
+.................... void main() 
+*
+01E5:  MOVF   03,W
+01E6:  ANDLW  1F
+01E7:  MOVWF  03
+01E8:  BCF    1F.6
+01E9:  MOVLW  00
+01EA:  BSF    03.5
+01EB:  MOVWF  11
+01EC:  MOVLW  07
+01ED:  BCF    03.5
+01EE:  MOVWF  19
+01EF:  MOVLW  02
+01F0:  MOVWF  2A
+01F1:  MOVLW  D0
+01F2:  MOVWF  29
+01F3:  MOVLW  04
+01F4:  MOVWF  2C
+01F5:  MOVLW  10
+01F6:  MOVWF  2B
+01F7:  CLRF   2E
+01F8:  MOVLW  30
+01F9:  MOVWF  2D
+01FA:  CLRF   30
+01FB:  CLRF   2F
+01FC:  BCF    31.0
+.................... { 
+....................     int16 temp_value_1; 
+....................     int16 temp_value_2; 
+....................      
+....................     int16 temp_min = 45 << 4; 
+....................     int16 temp_max = 65 << 4; 
+....................     int16 hysteresis = 3 << 4; 
+....................     unsigned int16 output = 0; 
+....................     int1 fan_on = 0; 
+....................      
+....................     //      DS18B20_DATA   **  *   - button 
+....................     set_tris_a(0x0);  // 0000 0000 
+01FD:  MOVLW  00
+01FE:  BSF    03.5
+01FF:  MOVWF  05
+....................      
+....................     //      DCDC_DISABLE    * **** - DAC output 
+....................     //               LED   *  3210 - bits 
+....................     set_tris_c(0xC0); // 1100 0000 
+0200:  MOVLW  C0
+0201:  MOVWF  07
+....................     output_c(0xDF);   // 1101 1111 
+0202:  MOVLW  DF
+0203:  BCF    03.5
+0204:  MOVWF  07
+....................                                                
+....................     port_a_pullups(0x04); 
+0205:  MOVLW  04
+0206:  BSF    03.5
+0207:  MOVWF  15
+0208:  BCF    01.7
+....................      
+....................     int1 sensor_present = 0; 
+0209:  BCF    03.5
+020A:  BCF    31.1
+....................     if(ds18b20_present(PROBE_PIN_1)) { 
+020B:  MOVLW  10
+020C:  MOVWF  37
+020D:  CALL   00A
+020E:  MOVF   21,F
+020F:  BTFSC  03.2
+0210:  GOTO   218
+....................         setup_db18b20(PROBE_PIN_1); 
+0211:  MOVLW  10
+0212:  MOVWF  34
+0213:  CALL   0F6
+....................         sensor_present = 1; 
+0214:  BSF    31.1
+....................         blink(1); 
+0215:  MOVLW  01
+0216:  MOVWF  34
+0217:  CALL   15A
+....................     } 
+....................     if(ds18b20_present(PROBE_PIN_2)) { 
+0218:  MOVLW  20
+0219:  MOVWF  37
+021A:  CALL   00A
+021B:  MOVF   21,F
+021C:  BTFSC  03.2
+021D:  GOTO   225
+....................         setup_db18b20(PROBE_PIN_2); 
+021E:  MOVLW  20
+021F:  MOVWF  34
+0220:  CALL   0F6
+....................         sensor_present = 1; 
+0221:  BSF    31.1
+....................         blink(2); 
+0222:  MOVLW  02
+0223:  MOVWF  34
+0224:  CALL   15A
+....................     } 
+....................      
+....................     if (0 == sensor_present) { 
+0225:  BTFSC  31.1
+0226:  GOTO   22A
+....................         // No temp sensor present at all - fall in error 
+....................         display_error(3); 
+0227:  MOVLW  03
+0228:  MOVWF  34
+0229:  GOTO   16A
+....................     } 
+....................      
+....................     while(TRUE) 
+....................     { 
+....................         temp_value_1 = read_temp(PROBE_PIN_1); 
+022A:  MOVLW  10
+022B:  MOVWF  34
+022C:  CALL   18A
+022D:  MOVF   22,W
+022E:  MOVWF  26
+022F:  MOVF   21,W
+0230:  MOVWF  25
+....................         temp_value_2 = read_temp(PROBE_PIN_2); 
+0231:  MOVLW  20
+0232:  MOVWF  34
+0233:  CALL   18A
+0234:  MOVF   22,W
+0235:  MOVWF  28
+0236:  MOVF   21,W
+0237:  MOVWF  27
+....................         if (temp_value_2 > temp_value_1) { 
+0238:  MOVF   26,W
+0239:  SUBWF  28,W
+023A:  BTFSS  03.0
+023B:  GOTO   246
+023C:  BTFSS  03.2
+023D:  GOTO   242
+023E:  MOVF   27,W
+023F:  SUBWF  25,W
+0240:  BTFSC  03.0
+0241:  GOTO   246
+....................             temp_value_1 = temp_value_2; 
+0242:  MOVF   28,W
+0243:  MOVWF  26
+0244:  MOVF   27,W
+0245:  MOVWF  25
+....................         } 
+....................          
+....................         unsigned int8 portvalue = 0xC0; 
+0246:  MOVLW  C0
+0247:  MOVWF  32
+....................         if( 
+....................             (bit_test(temp_value_1, 15) == 1) || 
+....................             (temp_value_1 < (temp_min - (fan_on ? hysteresis : 0))) 
+0248:  BTFSC  26.7
+0249:  GOTO   263
+024A:  BTFSS  31.0
+024B:  GOTO   24E
+024C:  MOVF   2D,W
+024D:  GOTO   24F
+024E:  MOVLW  00
+024F:  SUBWF  29,W
+0250:  MOVWF  20
+0251:  MOVF   2A,W
+0252:  MOVWF  23
+0253:  MOVLW  00
+0254:  BTFSS  03.0
+0255:  MOVLW  01
+0256:  SUBWF  23,F
+0257:  MOVF   20,W
+0258:  MOVWF  21
+0259:  MOVF   26,W
+025A:  SUBWF  23,W
+025B:  BTFSS  03.0
+025C:  GOTO   268
+025D:  BTFSS  03.2
+025E:  GOTO   263
+025F:  MOVF   21,W
+0260:  SUBWF  25,W
+0261:  BTFSC  03.0
+0262:  GOTO   268
+....................         ) { 
+....................             // turn off the fan 
+....................             output = 0; 
+0263:  CLRF   30
+0264:  CLRF   2F
+....................             fan_on = 0; 
+0265:  BCF    31.0
+....................             // turn off LM2596 
+....................             portvalue |= 0x10; 
+0266:  BSF    32.4
+....................         } else { 
+0267:  GOTO   2B9
+....................             if(temp_value_1 < temp_min) { 
+0268:  MOVF   26,W
+0269:  SUBWF  2A,W
+026A:  BTFSS  03.0
+026B:  GOTO   275
+026C:  BTFSS  03.2
+026D:  GOTO   272
+026E:  MOVF   29,W
+026F:  SUBWF  25,W
+0270:  BTFSC  03.0
+0271:  GOTO   275
+....................                 output = 0; 
+0272:  CLRF   30
+0273:  CLRF   2F
+....................             } else { 
+0274:  GOTO   2A2
+....................                 // output = 0 .. 15 (PWM) | 16 (Full power; not supported yet) 
+....................                 // output = (cur - min) / (max - min) * 15 
+....................                 // output16 = (cur16 - min16) * 255 / (max16 - min16) 
+....................                 output = ((temp_value_1 - temp_min) << 4) / (temp_max - temp_min); 
+0275:  MOVF   29,W
+0276:  SUBWF  25,W
+0277:  MOVWF  34
+0278:  MOVF   26,W
+0279:  MOVWF  35
+027A:  MOVF   2A,W
+027B:  BTFSS  03.0
+027C:  INCFSZ 2A,W
+027D:  SUBWF  35,F
+027E:  RLF    34,F
+027F:  RLF    35,F
+0280:  RLF    34,F
+0281:  RLF    35,F
+0282:  RLF    34,F
+0283:  RLF    35,F
+0284:  RLF    34,F
+0285:  RLF    35,F
+0286:  MOVLW  F0
+0287:  ANDWF  34,F
+0288:  MOVF   29,W
+0289:  SUBWF  2B,W
+028A:  MOVWF  20
+028B:  MOVF   2C,W
+028C:  MOVWF  23
+028D:  MOVF   2A,W
+028E:  BTFSS  03.0
+028F:  INCFSZ 2A,W
+0290:  SUBWF  23,F
+0291:  MOVF   20,W
+0292:  MOVWF  36
+0293:  MOVF   23,W
+0294:  MOVWF  37
+0295:  MOVF   35,W
+0296:  MOVWF  39
+0297:  MOVF   34,W
+0298:  MOVWF  38
+0299:  MOVF   23,W
+029A:  MOVWF  3B
+029B:  MOVF   20,W
+029C:  MOVWF  3A
+029D:  GOTO   1C0
+029E:  MOVF   22,W
+029F:  MOVWF  30
+02A0:  MOVF   21,W
+02A1:  MOVWF  2F
+....................             } 
+....................              
+....................             if(output > 0x0F) { 
+02A2:  MOVF   30,F
+02A3:  BTFSS  03.2
+02A4:  GOTO   2A9
+02A5:  MOVF   2F,W
+02A6:  SUBLW  0F
+02A7:  BTFSC  03.0
+02A8:  GOTO   2AC
+....................                 output = 0x0F; 
+02A9:  CLRF   30
+02AA:  MOVLW  0F
+02AB:  MOVWF  2F
+....................             } 
+....................              
+....................             // turn on LM2596 
+....................             portvalue |= (~output & 0x0F); 
+02AC:  MOVF   2F,W
+02AD:  MOVWF  34
+02AE:  COMF   34,F
+02AF:  MOVF   30,W
+02B0:  MOVWF  35
+02B1:  COMF   35,F
+02B2:  MOVF   34,W
+02B3:  ANDLW  0F
+02B4:  MOVWF  20
+02B5:  CLRF   23
+02B6:  MOVF   20,W
+02B7:  IORWF  32,F
+....................             fan_on = 1; 
+02B8:  BSF    31.0
+....................         }  
+....................         output_c(portvalue); 
+02B9:  MOVF   32,W
+02BA:  MOVWF  07
+....................          
+....................         // starting blink 
+....................         output_high(LED); 
+02BB:  BSF    07.5
+....................         delay_ms(DELAY); 
+02BC:  MOVLW  C8
+02BD:  MOVWF  37
+02BE:  CALL   143
+....................         output_low(LED); 
+02BF:  BCF    07.5
+....................         delay_ms(DELAY * 2); 
+02C0:  MOVLW  02
+02C1:  MOVWF  34
+02C2:  MOVLW  C8
+02C3:  MOVWF  37
+02C4:  CALL   143
+02C5:  DECFSZ 34,F
+02C6:  GOTO   2C2
+....................          
+....................         // display current output value 
+....................         for (int8 i = 0; i < 16; i++) { 
+02C7:  CLRF   33
+02C8:  MOVF   33,W
+02C9:  SUBLW  0F
+02CA:  BTFSS  03.0
+02CB:  GOTO   2DF
+....................             if (output > i) output_high(LED); else output_low(LED); 
+02CC:  MOVF   30,F
+02CD:  BTFSS  03.2
+02CE:  GOTO   2D3
+02CF:  MOVF   2F,W
+02D0:  SUBWF  33,W
+02D1:  BTFSC  03.0
+02D2:  GOTO   2D5
+02D3:  BSF    07.5
+02D4:  GOTO   2D6
+02D5:  BCF    07.5
+....................             delay_ms(65); 
+02D6:  MOVLW  41
+02D7:  MOVWF  37
+02D8:  CALL   143
+....................             output_low(LED); 
+02D9:  BCF    07.5
+....................             delay_ms(65); 
+02DA:  MOVLW  41
+02DB:  MOVWF  37
+02DC:  CALL   143
+02DD:  INCF   33,F
+02DE:  GOTO   2C8
+....................         } 
+02DF:  GOTO   22A
+....................     } 
+....................  
+.................... } 
+02E0:  SLEEP
+
+Configuration Fuses:
+   Word  1: 11E4   INTRC_IO NOWDT PUT MCLR BROWNOUT NOPROTECT NOCPD
+
+ROM data:
+002100: 0045 0065 0003 

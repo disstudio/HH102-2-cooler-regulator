@@ -1,0 +1,107 @@
+004-005 @READ_PROGRAM_MEMORY8.P1
+019.6   C1OUT
+020     @SCRATCH
+021     @SCRATCH
+021     _RETURN_
+022     @SCRATCH
+023     @SCRATCH
+025-026 MAIN.temp_value_1
+027-028 MAIN.temp_value_2
+029-02A MAIN.temp_min
+02B-02C MAIN.temp_max
+02D-02E MAIN.hysteresis
+02F-030 MAIN.output
+031.0   MAIN.fan_on
+031.1   MAIN.sensor_present
+032     MAIN.portvalue
+033     MAIN.i
+034     read_temp.mask
+034     setup_db18b20.mask
+034     display_error.code
+034     blink.code
+034     MAIN.@SCRATCH1
+035     ds18b20_reset_pulse.mask
+035-036 read_temp.temp
+035     display_error.i
+035     blink.i
+035     MAIN.@SCRATCH2
+036     ds18b20_reset_pulse.@SCRATCH1
+036     display_error.@SCRATCH1
+036     MAIN.@SCRATCH3
+037     ds18b20_present.mask
+037     ds18b20_read_byte.mask
+037     ds18b20_write_byte.mask
+037     @delay_ms1.P1
+037     MAIN.@SCRATCH4
+038-039 @DIV1616.P1
+038     ds18b20_read_byte.i
+038.0   ds18b20_present.present
+038     ds18b20_write_byte.data
+039     ds18b20_write_byte.i
+039     ds18b20_read_byte.data
+039     ds18b20_present.@SCRATCH1
+03A     ds18b20_read_bit.mask
+03A-03B @DIV1616.P1
+03A     ds18b20_write_byte.@SCRATCH1
+03B.0   ds18b20_read_bit.data
+03B     ds18b20_write_bit.mask
+03C     ds18b20_write_bit.data
+03C     ds18b20_read_bit.@SCRATCH1
+03C     @DIV1616.@SCRATCH1
+03D     ds18b20_write_bit.@SCRATCH1
+09B-09C @READ_PROGRAM_MEMORY8.P1
+
+ROM Allocation:
+00000A  ds18b20_present
+000047  ds18b20_write_byte
+000057  ds18b20_write_bit
+0000BC  ds18b20_read_byte
+0000C4  ds18b20_read_bit
+0000F6  setup_db18b20
+0000F8  ds18b20_reset_pulse
+000143  @delay_ms1
+00015A  blink
+00016A  display_error
+00018A  read_temp
+0001C0  @DIV1616
+0001E5  MAIN
+0001E5  @cinit1
+0001EF  @cinit2
+
+Project Directory:
+    D:\Radio\=Проекты=\HH10x резервное питания для дома\HH102 UPS 24-12V\HH102-2 inv cooler\firmware\
+
+Project Files:
+    HH102-2.c                                               [13-Бер-25 16:16  CRC=D3DBC45D]
+    HH102-2.h                                               [13-Бер-25 15:31  CRC=CF12E969]
+    C:\Program Files (x86)\PICC\Devices\16F676.h            [08-Вер-15 14:14  CRC=6CD7EEEA]
+    ds18b20.c                                               [13-Бер-25 15:34  CRC=87A30FA3]
+
+Source signature=1F0CBBF6
+Program memory checksum=E6FA
+Program memory CRC=0562
+Hex file CRC=7B32
+
+Units:
+    HH102-2 (main)
+
+Compiler Settings:
+    Processor:      PIC16F676
+    Pointer Size:   8
+    ADC Range:      0-1023
+    Opt Level:      9
+    Short,Int,Long: UNSIGNED: 1,8,16
+    Float,Double:   32,32
+    Compile Mode:       CCS5
+
+Output Files:
+    XREF file:   HH102-2.xsym
+    Errors:      HH102-2.err
+    Ext Symbols: HH102-2.esym
+    INHX8:       HH102-2.hex
+    Symbols:     HH102-2.sym
+    List:        HH102-2.lst
+    Debug/COFF:  HH102-2.cof
+    Project:     HH102-2.ccspjt
+    Call Tree:   HH102-2.tre
+    Statistics:  HH102-2.STA
