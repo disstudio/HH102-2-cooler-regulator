@@ -1,0 +1,4 @@
+(sym_lib_table
+   (lib (name Scheme-it-export-HH102-2-2025-03-14-15-42)(type Legacy)(uri ${KIPRJMOD}/Scheme-it-export-HH102-2-2025-03-14-15-42.lib)   (options "")(descr ""))
+   (lib (name dk-lib)(type Legacy)(uri ${KIPRJMOD}/dk-lib.lib)(options "")(descr ""))
+)
